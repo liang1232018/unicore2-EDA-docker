@@ -2,6 +2,7 @@ FROM centos:6.9
 
 RUN yum install -y sudo tar wget openssh-server openssh-clients openssl openssl-devel epel-release
 RUN yum install -y gedit
+RUN yum install -y xorg-x11-font*
 
 #RUN yum groupinstall -y "GNOME Desktop"
 #RUN yum groupinstall -y "Development and Creative Workstation"
@@ -14,6 +15,9 @@ RUN sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config \
     && ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key \
     && ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key \
     && mkdir /var/run/sshd
+
+RUN dbus-uuidgen > /var/lib/dbus/machine-id
+ENV DISPLAY=:0
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
